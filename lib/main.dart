@@ -21,25 +21,13 @@ class AppointmentRemoveFromCalendar extends StatefulWidget {
   State<StatefulWidget> createState() => ScheduleExample();
 }
 
-List<String> views = <String>[
-  'Day',
-  'Week',
-  'WorkWeek',
-  'Month',
-  'Timeline Day',
-  'Timeline Week',
-  'Timeline WorkWeek'
-];
-
 class ScheduleExample extends State<AppointmentRemoveFromCalendar> {
-  CalendarView _calendarView;
-  List<Meeting> meetings;
-  MeetingDataSource events;
-  Meeting _selectedAppointment;
+  List<Meeting> meetings = <Meeting>[];
+  MeetingDataSource? events;
+  Meeting? _selectedAppointment;
 
   @override
   void initState() {
-    _calendarView = CalendarView.month;
     _selectedAppointment = null;
     meetings = <Meeting>[];
     events = _getCalendarDataSource();
@@ -49,36 +37,7 @@ class ScheduleExample extends State<AppointmentRemoveFromCalendar> {
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
-      appBar: AppBar(
-        leading: PopupMenuButton<String>(
-          icon: Icon(Icons.calendar_today),
-          itemBuilder: (BuildContext context) => views.map((String choice) {
-            return PopupMenuItem<String>(
-              value: choice,
-              child: Text(choice),
-            );
-          }).toList(),
-          onSelected: (String value) {
-            setState(() {
-              if (value == 'Day') {
-                _calendarView = CalendarView.day;
-              } else if (value == 'Week') {
-                _calendarView = CalendarView.week;
-              } else if (value == 'WorkWeek') {
-                _calendarView = CalendarView.workWeek;
-              } else if (value == 'Month') {
-                _calendarView = CalendarView.month;
-              } else if (value == 'Timeline Day') {
-                _calendarView = CalendarView.timelineDay;
-              } else if (value == 'Timeline Week') {
-                _calendarView = CalendarView.timelineWeek;
-              } else if (value == 'Timeline WorkWeek') {
-                _calendarView = CalendarView.timelineWorkWeek;
-              }
-            });
-          },
-        ),
-      ),
+      appBar: AppBar(),
       body: Column(
         children: <Widget>[
           Container(
@@ -87,11 +46,10 @@ class ScheduleExample extends State<AppointmentRemoveFromCalendar> {
               child: Text('Remove appointment'),
               onPressed: () {
                 if (_selectedAppointment != null) {
-                  events.appointments.removeAt(events.appointments
-                      .indexOf(_selectedAppointment));
-                  events.notifyListeners(
-                      CalendarDataSourceAction.remove,
-                      <Meeting>[]..add(_selectedAppointment));
+                  events!.appointments.removeAt(
+                      events!.appointments.indexOf(_selectedAppointment));
+                  events!.notifyListeners(CalendarDataSourceAction.remove,
+                      <Meeting>[]..add(_selectedAppointment!));
                 }
               },
             ),
@@ -99,7 +57,16 @@ class ScheduleExample extends State<AppointmentRemoveFromCalendar> {
           Container(
             height: 500,
             child: SfCalendar(
-              view: _calendarView,
+              view: CalendarView.month,
+              allowedViews: [
+                CalendarView.day,
+                CalendarView.week,
+                CalendarView.workWeek,
+                CalendarView.month,
+                CalendarView.timelineDay,
+                CalendarView.timelineWeek,
+                CalendarView.timelineWorkWeek,
+              ],
               initialSelectedDate: DateTime.now(),
               monthViewSettings: MonthViewSettings(showAgenda: true),
               dataSource: events,
@@ -147,11 +114,11 @@ class ScheduleExample extends State<AppointmentRemoveFromCalendar> {
   }
 
   void calendarTapped(CalendarTapDetails calendarTapDetails) {
-    if (calendarTapDetails.targetElement==CalendarElement.agenda || calendarTapDetails.targetElement==CalendarElement.appointment) {
-      final Meeting appointment = calendarTapDetails.appointments[0];
+    if (calendarTapDetails.targetElement == CalendarElement.agenda ||
+        calendarTapDetails.targetElement == CalendarElement.appointment) {
+      final Meeting appointment = calendarTapDetails.appointments![0];
       _selectedAppointment = appointment;
     }
-
   }
 }
 
@@ -165,12 +132,12 @@ class MeetingDataSource extends CalendarDataSource {
 
   @override
   DateTime getStartTime(int index) {
-    return source[index].from;
+    return source[index].from!;
   }
 
   @override
   DateTime getEndTime(int index) {
-    return source[index].to;
+    return source[index].to!;
   }
 
   @override
@@ -201,8 +168,8 @@ class MeetingDataSource extends CalendarDataSource {
 
 class Meeting {
   Meeting(
-      {@required this.from,
-      @required this.to,
+      {this.from,
+      this.to,
       this.background = Colors.green,
       this.isAllDay = false,
       this.eventName = '',
@@ -211,8 +178,8 @@ class Meeting {
       this.description = ''});
 
   final String eventName;
-  final DateTime from;
-  final DateTime to;
+  final DateTime? from;
+  final DateTime? to;
   final Color background;
   final bool isAllDay;
   final String startTimeZone;
