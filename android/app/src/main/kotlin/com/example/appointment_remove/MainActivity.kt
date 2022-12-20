@@ -1,4 +1,4 @@
-package com.example.flutter_appointment_remove
+package com.example.appointment_remove
 
 import io.flutter.embedding.android.FlutterActivity
 

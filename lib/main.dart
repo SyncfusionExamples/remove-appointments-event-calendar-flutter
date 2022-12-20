@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/widgets.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-void main() => runApp(AppointmentRemove());
+void main() => runApp(const AppointmentRemove());
 
 class AppointmentRemove extends StatelessWidget {
+  const AppointmentRemove({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: AppointmentRemoveFromCalendar(),
     );
@@ -17,6 +16,8 @@ class AppointmentRemove extends StatelessWidget {
 }
 
 class AppointmentRemoveFromCalendar extends StatefulWidget {
+  const AppointmentRemoveFromCalendar({super.key});
+
   @override
   State<StatefulWidget> createState() => ScheduleExample();
 }
@@ -42,8 +43,8 @@ class ScheduleExample extends State<AppointmentRemoveFromCalendar> {
         children: <Widget>[
           Container(
             height: 30,
-            child: FlatButton(
-              child: Text('Remove appointment'),
+            child: TextButton(
+              child: const Text('Remove appointment'),
               onPressed: () {
                 if (_selectedAppointment != null) {
                   events!.appointments.removeAt(
@@ -58,7 +59,7 @@ class ScheduleExample extends State<AppointmentRemoveFromCalendar> {
             height: 500,
             child: SfCalendar(
               view: CalendarView.month,
-              allowedViews: [
+              allowedViews: const [
                 CalendarView.day,
                 CalendarView.week,
                 CalendarView.workWeek,
@@ -68,7 +69,7 @@ class ScheduleExample extends State<AppointmentRemoveFromCalendar> {
                 CalendarView.timelineWorkWeek,
               ],
               initialSelectedDate: DateTime.now(),
-              monthViewSettings: MonthViewSettings(showAgenda: true),
+              monthViewSettings: const MonthViewSettings(showAgenda: true),
               dataSource: events,
               onTap: calendarTapped,
             ),
@@ -169,13 +170,13 @@ class MeetingDataSource extends CalendarDataSource {
 class Meeting {
   Meeting(
       {this.from,
-      this.to,
-      this.background = Colors.green,
-      this.isAllDay = false,
-      this.eventName = '',
-      this.startTimeZone = '',
-      this.endTimeZone = '',
-      this.description = ''});
+        this.to,
+        this.background = Colors.green,
+        this.isAllDay = false,
+        this.eventName = '',
+        this.startTimeZone = '',
+        this.endTimeZone = '',
+        this.description = ''});
 
   final String eventName;
   final DateTime? from;
